@@ -10,19 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 15003, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: Linux Server Dev
+  m_Name: Windows Mono Dev
   m_EditorClassIdentifier: 
-  m_BuildTarget: 24
-  m_Subtarget: 1
-  m_PlatformId: 91d938b35f6f4798811e41f2acf9377f
+  m_BuildTarget: 19
+  m_Subtarget: 2
+  m_PlatformId: 4e3c793746204150860bf175a9a41a05
   m_PlatformBuildProfile:
-    rid: 41490750047780868
+    rid: 41490750047780864
   m_Scenes:
   - m_enabled: 1
     m_path: Assets/Scenes/LiterallyJustACube.unity
   m_ScriptingDefines:
-  - TARGET_LINUX
-  - DEDICATED_SERVER
+  - TARGET_WINDOWS
   m_PlayerSettingsYaml:
     m_Settings:
     - line: '| PlayerSettings:'
@@ -848,11 +847,10 @@ MonoBehaviour:
     - line: '|   scriptingBackend:'
     - line: '|     Android: 1'
     - line: '|     Server: 1'
-    - line: '|     Standalone: 1'
+    - line: '|     Standalone: 0'
     - line: '|   il2cppCompilerConfiguration: {}'
     - line: '|   il2cppCodeGeneration: {}'
-    - line: '|   il2cppStacktraceInformation:'
-    - line: '|     Server: 1'
+    - line: '|   il2cppStacktraceInformation: {}'
     - line: '|   managedStrippingLevel:'
     - line: '|     Android: 1'
     - line: '|     EmbeddedLinux: 1'
@@ -977,8 +975,8 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 41490750047780868
-      type: {class: LinuxPlatformSettings, ns: UnityEditor.LinuxStandalone, asm: UnityEditor.LinuxStandalone.Extensions}
+    - rid: 41490750047780864
+      type: {class: WindowsPlatformSettings, ns: UnityEditor.WindowsStandalone, asm: UnityEditor.WindowsStandalone.Extensions}
       data:
         m_Development: 1
         m_ConnectProfiler: 0
@@ -991,3 +989,9 @@ MonoBehaviour:
         m_ExplicitArrayBoundsChecks: 0
         m_CompressionType: 0
         m_InstallInBuildFolder: 0
+        m_WindowsBuildAndRunDeployTarget: 0
+        m_Architecture: 0
+        m_CreateSolution: 0
+        m_CopyPDBFiles: 1
+        m_WindowsDevicePortalAddress: 
+        m_WindowsDevicePortalUsername: 

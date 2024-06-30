@@ -19,8 +19,10 @@ MonoBehaviour:
     rid: 41490750047780869
   m_Scenes:
   - m_enabled: 1
-    m_path: Assets/Scenes/SampleScene.unity
-  m_ScriptingDefines: []
+    m_path: Assets/Scenes/LiterallyJustACube.unity
+  m_ScriptingDefines:
+  - TARGET_IOS
+  - PLATFORM_APPLE
   m_PlayerSettingsYaml:
     m_Settings:
     - line: '| PlayerSettings:'
@@ -35,7 +37,7 @@ MonoBehaviour:
     - line: '|   useOnDemandResources: 0'
     - line: '|   accelerometerFrequency: 60'
     - line: '|   companyName: Yewnyx'
-    - line: '|   productName: UnityBuildScripts'
+    - line: '|   productName: NukeExample'
     - line: '|   defaultCursor: {instanceID: 0}'
     - line: '|   cursorHotspot: {x: 0, y: 0}'
     - line: '|   m_SplashScreenBackgroundColor: {r: 0.12156863, g: 0.12156863, b:
@@ -163,7 +165,7 @@ MonoBehaviour:
     - line: '|   loadStoreDebugModeEnabled: 0'
     - line: '|   visionOSBundleVersion: 1.0'
     - line: '|   tvOSBundleVersion: 1.0'
-    - line: '|   bundleVersion: 1.0'
+    - line: '|   bundleVersion: 0.1.0'
     - line: '|   preloadedAssets: []'
     - line: '|   metroInputSource: 0'
     - line: '|   wsaTransparentSwapchain: 0'
@@ -186,7 +188,7 @@ MonoBehaviour:
     - line: '|   androidMaxAspectRatio: 2.1'
     - line: '|   androidMinAspectRatio: 1'
     - line: '|   applicationIdentifier:'
-    - line: '|     iPhone: com.Yewnyx.UnityBuildScripts'
+    - line: '|     iPhone: com.Yewnyx.NukeExample'
     - line: '|   buildNumber:'
     - line: '|     Standalone: 0'
     - line: '|     VisionOS: 0'

@@ -17,8 +17,12 @@ MonoBehaviour:
   m_PlatformId: 8d1e1bca926649cba89d37a4c66e8b3d
   m_PlatformBuildProfile:
     rid: 41490750047780865
-  m_Scenes: []
-  m_ScriptingDefines: []
+  m_Scenes:
+  - m_enabled: 1
+    m_path: Assets/Scenes/LiterallyJustACube.unity
+  m_ScriptingDefines:
+  - TARGET_WINDOWS
+  - DEDICATED_SERVER
   m_PlayerSettingsYaml:
     m_Settings:
     - line: '| PlayerSettings:'
@@ -975,10 +979,10 @@ MonoBehaviour:
     - rid: 41490750047780865
       type: {class: WindowsPlatformSettings, ns: UnityEditor.WindowsStandalone, asm: UnityEditor.WindowsStandalone.Extensions}
       data:
-        m_Development: 0
+        m_Development: 1
         m_ConnectProfiler: 0
         m_BuildWithDeepProfilingSupport: 0
-        m_AllowDebugging: 0
+        m_AllowDebugging: 1
         m_WaitForManagedDebugger: 0
         m_ManagedDebuggerFixedPort: 0
         m_ExplicitNullChecks: 0
