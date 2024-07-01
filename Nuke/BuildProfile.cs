@@ -26,7 +26,7 @@ public class BuildProfile : Enumeration
     public static BuildProfile Windows = new() { Value = "Windows" };
 
     public static implicit operator string(BuildProfile buildProfile) => buildProfile.Value;
-    
+
     public string SpacelessValue => Value.Replace(" ", "");
 
     public bool IsLinuxServer => this == LinuxServer || this == LinuxServerDev || this == LinuxServerMonoDev;
@@ -50,7 +50,7 @@ public class BuildProfile : Enumeration
         "Windows" => string.Empty,
         _ => throw new ArgumentOutOfRangeException()
     };
-    
+
     public string Extension => Value switch
     {
         "Android Dev" => ".apk",
@@ -72,11 +72,12 @@ public class BuildProfile : Enumeration
     };
 
     public AbsolutePath GetOutputFolder(AbsolutePath rootDirectory) => rootDirectory / "Builds" / SpacelessValue;
+    public string GetExecutableFilename(string exeName) => $"{exeName}{Tag}{Extension}";
+    public AbsolutePath GetExecutablePath(AbsolutePath rootDirectory, string exeName) => GetShipFolder(rootDirectory) / GetExecutableFilename(exeName);
     public AbsolutePath GetShipFolder(AbsolutePath rootDirectory) => GetOutputFolder(rootDirectory) / "Ship";
     public AbsolutePath GetDontShipFolder(AbsolutePath rootDirectory) => GetOutputFolder(rootDirectory) / "DontShip";
-    public AbsolutePath GetOutputPath(AbsolutePath rootDirectory, string exeName) => GetShipFolder(rootDirectory) / $"{exeName}{Tag}{Extension}";
     public AbsolutePath GetDontShipArchive(AbsolutePath rootDirectory, string exeName, string archiveExtension) =>
         GetOutputFolder(rootDirectory) / $"{exeName}{Tag}-{SpacelessValue}.{archiveExtension}";
-    
+
     public string BuildProfilePath => Path.Combine("Assets", "Settings", "Build Profiles", $"{Value}.asset");
 }

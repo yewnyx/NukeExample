@@ -14,6 +14,8 @@ class Build : NukeBuild
 {
     public static int Main () => Execute<Build>(x => x.PlayerBuild);
 
+    const string ProjectName = "NukeExample";
+
     [Parameter("Build Profile")] BuildProfile BuildProfile;
 
     Target SwitchProfile => _ => _
@@ -42,7 +44,7 @@ class Build : NukeBuild
             var dontShipFolder = BuildProfile.GetDontShipFolder(RootDirectory);
             dontShipFolder.CreateOrCleanDirectory();
 
-            var outputPath = BuildProfile.GetOutputPath(RootDirectory, "NukeExample");
+            var outputPath = BuildProfile.GetExecutablePath(RootDirectory, ProjectName);
 
             UnityTasks.Unity(_ => _
                 .SetHubVersion("6000.0.5f1")
@@ -59,7 +61,7 @@ class Build : NukeBuild
                 directory.MoveToDirectory(dontShipFolder);
             }
 
-            var dontShipArchive = BuildProfile.GetDontShipArchive(RootDirectory, "NukeExample", "zip");
+            var dontShipArchive = BuildProfile.GetDontShipArchive(RootDirectory, ProjectName, "zip");
             dontShipFolder.ZipTo(dontShipArchive, compressionLevel: CompressionLevel.SmallestSize);
             dontShipFolder.DeleteDirectory();
         });
@@ -73,11 +75,11 @@ class Build : NukeBuild
             var dockerFile = RootDirectory / "Nuke"/ "Docker" / "Dockerfile";
             var dockerIgnore = RootDirectory / "Nuke"/ "Docker" / ".dockerignore";
 
-            var dockerContext = RootDirectory / "Nuke"/ "Docker" / "DockerContext";
+            var dockerContext = TemporaryDirectory / "DockerContext" / ProjectName;
             dockerContext.CreateOrCleanDirectory();
 
             var shipFolder = BuildProfile.GetShipFolder(RootDirectory);
-            var dockerImage = "nuke-example";
+            var dockerImage = ProjectName.Replace(" ", "-").ToLower();
             var dockerTag = "latest";
 
             CopyFileToDirectory(dockerFile, dockerContext);
@@ -87,6 +89,13 @@ class Build : NukeBuild
             DockerTasks.DockerBuild(_ => _
                 .SetFile(dockerFile)
                 .SetTag(dockerImage, dockerTag)
-                .SetPath(dockerContext));
+                .SetPath(dockerContext)
+                .SetBuildArg([$"SERVER_EXECUTABLE=\"{BuildProfile.GetExecutableFilename(ProjectName)}\""])
+
+            );
+            DockerTasks.DockerSave(_ => _
+                .SetImages($"{dockerImage}:{dockerTag}")
+                .SetOutput(BuildProfile.GetOutputFolder(RootDirectory) / (dockerImage + ".tar")));
+            dockerContext.DeleteDirectory();
         });
 }

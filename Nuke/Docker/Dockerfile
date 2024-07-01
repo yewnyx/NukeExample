@@ -6,9 +6,12 @@ LABEL 'org.opencontainers.image.description'='Docker image for NukeExample dedic
 LABEL 'org.opencontainers.license'='MIT'
 LABEL 'org.opencontainers.url'='https://github.com/yewnyx/NukeExample'
 
-ADD Game /server
+ARG SERVER_EXECUTABLE
+ENV SERVER_EXECUTABLE=$SERVER_EXECUTABLE
+
+COPY Game /server
 
 VOLUME /server/shared
 WORKDIR /server
-ENTRYPOINT ["/server/NukeExampleDedicatedServer.x86_64"]
+ENTRYPOINT ["/bin/sh", "-c", "/server/$SERVER_EXECUTABLE"]
 
