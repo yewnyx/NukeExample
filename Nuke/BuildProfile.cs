@@ -27,30 +27,54 @@ public class BuildProfile : Enumeration
 
     public static implicit operator string(BuildProfile buildProfile) => buildProfile.Value;
     
+    public string SpacelessValue => Value.Replace(" ", "");
+    
+    public string Tag => Value switch
+    {
+        "Android Dev" => "Dev",
+        "Android" => string.Empty,
+        "iOS Dev" => "Dev",
+        "iOS" => string.Empty,
+        "Linux Server Dev" => "DedicatedServerDev",
+        "Linux Server Mono Dev" => "DedicatedServerDevMono",
+        "Linux Server" => "DedicatedServer",
+        "Quest Dev" => "Dev",
+        "Quest" => string.Empty,
+        "Windows Dev" => "Dev",
+        "Windows Mono Dev" => "DevMono",
+        "Windows Server Dev" => "DedicatedServerDev",
+        "Windows Server Mono Dev" => "DedicatedServerDevMono",
+        "Windows Server" => "DedicatedServer",
+        "Windows" => string.Empty,
+        _ => throw new ArgumentOutOfRangeException()
+    };
+    
     public string Extension => Value switch
     {
-        "Android Dev" => "-dev.apk",
+        "Android Dev" => ".apk",
         "Android" => ".apk",
-        "iOS Dev" => "Dev.ipa",
+        "iOS Dev" => ".ipa",
         "iOS" => ".ipa",
-        "Linux Server Dev" => "DedicatedServerDev.x86_64",
-        "Linux Server Mono Dev" => "DedicatedServerDevMono.x86_64",
-        "Linux Server" => "DedicatedServer.x86_64",
-        "Quest Dev" => "Dev.apk",
+        "Linux Server Dev" => ".x86_64",
+        "Linux Server Mono Dev" => ".x86_64",
+        "Linux Server" => ".x86_64",
+        "Quest Dev" => ".apk",
         "Quest" => ".apk",
-        "Windows Dev" => "Dev.exe",
-        "Windows Mono Dev" => "DevMono.exe",
-        "Windows Server Dev" => "DedicatedServerDev.exe",
-        "Windows Server Mono Dev" => "DedicatedServerDevMono.exe",
-        "Windows Server" => "DedicatedServer.exe",
+        "Windows Dev" => ".exe",
+        "Windows Mono Dev" => ".exe",
+        "Windows Server Dev" => ".exe",
+        "Windows Server Mono Dev" => ".exe",
+        "Windows Server" => ".exe",
         "Windows" => ".exe",
         _ => throw new ArgumentOutOfRangeException()
     };
 
-    public AbsolutePath GetOutputFolder(AbsolutePath RootDirectory) => RootDirectory / "Builds" / Value.Replace(" ", "");
-    public AbsolutePath GetShipFolder(AbsolutePath RootDirectory) => GetOutputFolder(RootDirectory) / "Ship";
-    public AbsolutePath GetDontShipFolder(AbsolutePath RootDirectory) => GetOutputFolder(RootDirectory) / "DontShip";
-    public AbsolutePath GetOutputPath(AbsolutePath RootDirectory, string exeName) => GetShipFolder(RootDirectory) / $"{exeName}{Extension}";
+    public AbsolutePath GetOutputFolder(AbsolutePath rootDirectory) => rootDirectory / "Builds" / SpacelessValue;
+    public AbsolutePath GetShipFolder(AbsolutePath rootDirectory) => GetOutputFolder(rootDirectory) / "Ship";
+    public AbsolutePath GetDontShipFolder(AbsolutePath rootDirectory) => GetOutputFolder(rootDirectory) / "DontShip";
+    public AbsolutePath GetOutputPath(AbsolutePath rootDirectory, string exeName) => GetShipFolder(rootDirectory) / $"{exeName}{Tag}{Extension}";
+    public AbsolutePath GetDontShipArchive(AbsolutePath rootDirectory, string exeName, string archiveExtension) =>
+        GetOutputFolder(rootDirectory) / $"{exeName}{Tag}-{SpacelessValue}.{archiveExtension}";
     
     public string BuildProfilePath => Path.Combine("Assets", "Settings", "Build Profiles", $"{Value}.asset");
 }

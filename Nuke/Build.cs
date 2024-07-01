@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tools.Unity;
@@ -56,6 +57,10 @@ class Build : NukeBuild
             foreach (var directory in dontShipDirectories) {
                 directory.MoveToDirectory(dontShipFolder);
             }
+            
+            var dontShipArchive = BuildProfile.GetDontShipArchive(RootDirectory, "NukeExample", "zip");
+            dontShipFolder.ZipTo(dontShipArchive, compressionLevel: CompressionLevel.SmallestSize);
+            dontShipFolder.DeleteDirectory();
         });
 
 }
