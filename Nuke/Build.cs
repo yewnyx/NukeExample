@@ -10,7 +10,7 @@ namespace xyz.yewnyx.build;
 
 class Build : NukeBuild
 {
-    public static int Main () => Execute<Build>(x => x.SwitchProfile);
+    public static int Main () => Execute<Build>(x => x.PlayerBuild);
 
     [Parameter("Build Profile")] BuildProfile BuildProfile;
 
@@ -26,24 +26,36 @@ class Build : NukeBuild
             );
         });
 
-    Target Compile => _ => _
+    Target PlayerBuild => _ => _
         .Requires(() => BuildProfile)
         .DependsOn(SwitchProfile)
         .Executes(() =>
         {
-            var outputFolder = RootDirectory / "Builds" / BuildProfile;
+            var outputFolder = BuildProfile.GetOutputFolder(RootDirectory);
             outputFolder.CreateOrCleanDirectory();
-            var outputPath = outputFolder / "Game.exe";
+            
+            var shipFolder = BuildProfile.GetShipFolder(RootDirectory);
+            shipFolder.CreateOrCleanDirectory();
+            
+            var dontShipFolder = BuildProfile.GetDontShipFolder(RootDirectory);
+            dontShipFolder.CreateOrCleanDirectory();
+            
+            var outputPath = BuildProfile.GetOutputPath(RootDirectory, "NukeExample");
             
             UnityTasks.Unity(_ => _
                 .SetHubVersion("6000.0.5f1")
                 .SetProjectPath(RootDirectory)
                 .EnableBatchMode()
                 .EnableNoGraphics()
-                .EnableQuit()
                 .SetExecuteMethod("xyz.yewnyx.build.BuildScript.Build")
                 .AddCustomArguments("-activeBuildProfile", BuildProfile.BuildProfilePath)
                 .AddCustomArguments("-outputPath", outputPath));
+            
+            var dontShipDirectories = (outputFolder / "Ship").GlobDirectories("*_BurstDebugInformation_DoNotShip",
+                "*_BackUpThisFolder_ButDontShipItWithYourGame");
+            foreach (var directory in dontShipDirectories) {
+                directory.MoveToDirectory(dontShipFolder);
+            }
         });
 
 }

@@ -31,23 +31,26 @@ public class BuildProfile : Enumeration
     {
         "Android Dev" => "-dev.apk",
         "Android" => ".apk",
-        "iOS Dev" => "-dev.ipa",
+        "iOS Dev" => "Dev.ipa",
         "iOS" => ".ipa",
-        "Linux Server Dev" => "-dedicated-dev.x86_64",
-        "Linux Server Mono Dev" => "-dedicated-dev-mono.x86_64",
-        "Linux Server" => "-dedicated.x86_64",
-        "Quest Dev" => ".apk",
+        "Linux Server Dev" => "DedicatedServerDev.x86_64",
+        "Linux Server Mono Dev" => "DedicatedServerDevMono.x86_64",
+        "Linux Server" => "DedicatedServer.x86_64",
+        "Quest Dev" => "Dev.apk",
         "Quest" => ".apk",
-        "Windows Dev" => "-dev.exe",
-        "Windows Mono Dev" => "-dev-mono.exe",
-        "Windows Server Dev" => "dedicated-dev.exe",
-        "Windows Server Mono Dev" => "dedicated-dev-mono.exe",
-        "Windows Server" => "dedicated.exe",
+        "Windows Dev" => "Dev.exe",
+        "Windows Mono Dev" => "DevMono.exe",
+        "Windows Server Dev" => "DedicatedServerDev.exe",
+        "Windows Server Mono Dev" => "DedicatedServerDevMono.exe",
+        "Windows Server" => "DedicatedServer.exe",
         "Windows" => ".exe",
         _ => throw new ArgumentOutOfRangeException()
     };
 
-    public string GetOutputPath(AbsolutePath RootDirectory, string exeName) => RootDirectory / "Builds" / Value / $"{exeName}{Extension}";
+    public AbsolutePath GetOutputFolder(AbsolutePath RootDirectory) => RootDirectory / "Builds" / Value.Replace(" ", "");
+    public AbsolutePath GetShipFolder(AbsolutePath RootDirectory) => GetOutputFolder(RootDirectory) / "Ship";
+    public AbsolutePath GetDontShipFolder(AbsolutePath RootDirectory) => GetOutputFolder(RootDirectory) / "DontShip";
+    public AbsolutePath GetOutputPath(AbsolutePath RootDirectory, string exeName) => GetShipFolder(RootDirectory) / $"{exeName}{Extension}";
     
     public string BuildProfilePath => Path.Combine("Assets", "Settings", "Build Profiles", $"{Value}.asset");
 }
