@@ -1,13 +1,14 @@
 using System.IO.Compression;
 using Nuke.Common;
 using Nuke.Common.IO;
+using Nuke.Common.Tools.Docker;
 using Nuke.Common.Tools.Unity;
 using xyz.yewnyx.build.Nuke;
 using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 
-namespace xyz.yewnyx.build; 
+namespace xyz.yewnyx.build;
 
 class Build : NukeBuild
 {
@@ -34,15 +35,15 @@ class Build : NukeBuild
         {
             var outputFolder = BuildProfile.GetOutputFolder(RootDirectory);
             outputFolder.CreateOrCleanDirectory();
-            
+
             var shipFolder = BuildProfile.GetShipFolder(RootDirectory);
             shipFolder.CreateOrCleanDirectory();
-            
+
             var dontShipFolder = BuildProfile.GetDontShipFolder(RootDirectory);
             dontShipFolder.CreateOrCleanDirectory();
-            
+
             var outputPath = BuildProfile.GetOutputPath(RootDirectory, "NukeExample");
-            
+
             UnityTasks.Unity(_ => _
                 .SetHubVersion("6000.0.5f1")
                 .SetProjectPath(RootDirectory)
@@ -51,16 +52,41 @@ class Build : NukeBuild
                 .SetExecuteMethod("xyz.yewnyx.build.BuildScript.Build")
                 .AddCustomArguments("-activeBuildProfile", BuildProfile.BuildProfilePath)
                 .AddCustomArguments("-outputPath", outputPath));
-            
+
             var dontShipDirectories = (outputFolder / "Ship").GlobDirectories("*_BurstDebugInformation_DoNotShip",
                 "*_BackUpThisFolder_ButDontShipItWithYourGame");
             foreach (var directory in dontShipDirectories) {
                 directory.MoveToDirectory(dontShipFolder);
             }
-            
+
             var dontShipArchive = BuildProfile.GetDontShipArchive(RootDirectory, "NukeExample", "zip");
             dontShipFolder.ZipTo(dontShipArchive, compressionLevel: CompressionLevel.SmallestSize);
             dontShipFolder.DeleteDirectory();
         });
 
+    Target DockerBuild => _ => _
+        .TriggeredBy(PlayerBuild)
+        .Requires(() => BuildProfile)
+        .OnlyWhenDynamic(() => BuildProfile.IsLinuxServer)
+        .Executes(() =>
+        {
+            var dockerFile = RootDirectory / "Nuke"/ "Docker" / "Dockerfile";
+            var dockerIgnore = RootDirectory / "Nuke"/ "Docker" / ".dockerignore";
+
+            var dockerContext = RootDirectory / "Nuke"/ "Docker" / "DockerContext";
+            dockerContext.CreateOrCleanDirectory();
+
+            var shipFolder = BuildProfile.GetShipFolder(RootDirectory);
+            var dockerImage = "nuke-example";
+            var dockerTag = "latest";
+
+            CopyFileToDirectory(dockerFile, dockerContext);
+            CopyFileToDirectory(dockerIgnore, dockerContext);
+            CopyDirectoryRecursively(shipFolder, dockerContext / "Game");
+
+            DockerTasks.DockerBuild(_ => _
+                .SetFile(dockerFile)
+                .SetTag(dockerImage, dockerTag)
+                .SetPath(dockerContext));
+        });
 }

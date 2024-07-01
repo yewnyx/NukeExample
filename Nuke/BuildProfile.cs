@@ -28,7 +28,9 @@ public class BuildProfile : Enumeration
     public static implicit operator string(BuildProfile buildProfile) => buildProfile.Value;
     
     public string SpacelessValue => Value.Replace(" ", "");
-    
+
+    public bool IsLinuxServer => this == LinuxServer || this == LinuxServerDev || this == LinuxServerMonoDev;
+
     public string Tag => Value switch
     {
         "Android Dev" => "Dev",

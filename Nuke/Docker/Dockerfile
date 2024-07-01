@@ -1,0 +1,14 @@
+FROM ubuntu:22.04
+
+LABEL 'org.opencontainers.version'=1.0
+LABEL 'org.opencontainers.image.authors'='yewnyx@yewnyx.xyz'
+LABEL 'org.opencontainers.image.description'='Docker image for NukeExample dedicated server.'
+LABEL 'org.opencontainers.license'='MIT'
+LABEL 'org.opencontainers.url'='https://github.com/yewnyx/NukeExample'
+
+ADD Game /server
+
+VOLUME /server/shared
+WORKDIR /server
+ENTRYPOINT ["/server/NukeExampleDedicatedServer.x86_64"]
+
