@@ -1,7 +1,10 @@
+using System;
 using System.IO.Compression;
+using System.Threading;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tools.Docker;
+using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.Unity;
 using xyz.yewnyx.build.Nuke;
 using static Nuke.Common.EnvironmentInfo;
@@ -17,6 +20,8 @@ class Build : NukeBuild
     const string ProjectName = "NukeExample";
 
     [Parameter("Build Profile")] BuildProfile BuildProfile;
+
+    [GitVersion] readonly GitVersion GitVersion;
 
     Target SwitchProfile => _ => _
         .Requires(() => BuildProfile)
@@ -53,6 +58,8 @@ class Build : NukeBuild
                 .EnableNoGraphics()
                 .SetExecuteMethod("xyz.yewnyx.build.BuildScript.Build")
                 .AddCustomArguments("-activeBuildProfile", BuildProfile.BuildProfilePath)
+                .AddCustomArguments("-branch", GitVersion.BranchName)
+                .AddCustomArguments("-commit", GitVersion.ShortSha)
                 .AddCustomArguments("-outputPath", outputPath));
 
             var dontShipDirectories = (outputFolder / "Ship").GlobDirectories("*_BurstDebugInformation_DoNotShip",
@@ -80,7 +87,7 @@ class Build : NukeBuild
 
             var shipFolder = BuildProfile.GetShipFolder(RootDirectory);
             var dockerImage = ProjectName.Replace(" ", "-").ToLower();
-            var dockerTag = "latest";
+            var dockerTag = GitVersion.EscapedBranchName;
 
             CopyFileToDirectory(dockerFile, dockerContext);
             CopyFileToDirectory(dockerIgnore, dockerContext);
@@ -88,14 +95,15 @@ class Build : NukeBuild
 
             DockerTasks.DockerBuild(_ => _
                 .SetFile(dockerFile)
-                .SetTag(dockerImage, dockerTag)
+                .AddLabel($"org.opencontainers.image.version=\"{GitVersion.BranchName}-{GitVersion.ShortSha}\"")
+                .AddTag($"{dockerImage}:latest")
+                .AddTag($"{dockerImage}:{dockerTag}")
                 .SetPath(dockerContext)
-                .SetBuildArg([$"SERVER_EXECUTABLE=\"{BuildProfile.GetExecutableFilename(ProjectName)}\""])
-
+                .AddBuildArg($"SERVER_EXECUTABLE=\"{BuildProfile.GetExecutableFilename(ProjectName)}\"")
             );
             DockerTasks.DockerSave(_ => _
                 .SetImages($"{dockerImage}:{dockerTag}")
-                .SetOutput(BuildProfile.GetOutputFolder(RootDirectory) / (dockerImage + ".tar")));
+                .SetOutput(BuildProfile.GetOutputFolder(RootDirectory) / ($"{dockerImage}-{dockerTag}.tar")));
             dockerContext.DeleteDirectory();
         });
 }

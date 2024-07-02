@@ -1,10 +1,9 @@
 FROM ubuntu:22.04
 
-LABEL 'org.opencontainers.version'=1.0
 LABEL 'org.opencontainers.image.authors'='yewnyx@yewnyx.xyz'
 LABEL 'org.opencontainers.image.description'='Docker image for NukeExample dedicated server.'
-LABEL 'org.opencontainers.license'='MIT'
-LABEL 'org.opencontainers.url'='https://github.com/yewnyx/NukeExample'
+LABEL 'org.opencontainers.image.licenses'='MIT'
+LABEL 'org.opencontainers.image.url'='https://github.com/yewnyx/NukeExample'
 
 ARG SERVER_EXECUTABLE
 ENV SERVER_EXECUTABLE=$SERVER_EXECUTABLE
