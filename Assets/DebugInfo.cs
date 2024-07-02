@@ -18,6 +18,11 @@ public class DebugInfo : MonoBehaviour {
             Debug.Log($"{nameof(Application.unityVersion)}: {Application.unityVersion}");
             Debug.Log($"{nameof(Application.companyName)}: {Application.companyName}");
             Debug.Log($"{nameof(Application.productName)}: {Application.productName}");
+            Debug.Log($"{nameof(Application.dataPath)}: {Application.dataPath}");
+            Debug.Log($"{nameof(Application.persistentDataPath)}: {Application.persistentDataPath}");
+            Debug.Log($"{nameof(Application.streamingAssetsPath)}: {Application.streamingAssetsPath}");
+            Debug.Log($"{nameof(Application.temporaryCachePath)}: {Application.temporaryCachePath}");
+            Debug.Log($"{nameof(Application.consoleLogPath)}: {Application.consoleLogPath}");
             Debug.Log($"{nameof(Application.genuine)}: {Application.genuine}");
             Debug.Log($"{nameof(Application.identifier)}: {Application.identifier}");
             Debug.Log($"{nameof(Application.platform)}: {Application.platform}");
