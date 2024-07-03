@@ -9,7 +9,7 @@
     "com.unity.toolchain.win-x86_64-linux-x86_64": "2.0.9",
     "com.unity.ugui": "2.0.0",
     "com.unity.visualscripting": "1.9.4",
-    "xyz.yewnyx.build": "file:../../UnityBuildScripts/Packages/xyz.yewnyx.build",
+    "xyz.yewnyx.build": "https://github.com/yewnyx/UnityBuildScripts.git?path=Packages/xyz.yewnyx.build#f0a93b7b96d843993cf8b5467f3ec211e5003d0f",
     "com.unity.modules.accessibility": "1.0.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",

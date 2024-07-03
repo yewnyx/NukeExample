@@ -208,10 +208,11 @@
       "url": "https://packages.unity.com"
     },
     "xyz.yewnyx.build": {
-      "version": "file:../../UnityBuildScripts/Packages/xyz.yewnyx.build",
+      "version": "https://github.com/yewnyx/UnityBuildScripts.git?path=Packages/xyz.yewnyx.build#f0a93b7b96d843993cf8b5467f3ec211e5003d0f",
       "depth": 0,
-      "source": "local",
-      "dependencies": {}
+      "source": "git",
+      "dependencies": {},
+      "hash": "f0a93b7b96d843993cf8b5467f3ec211e5003d0f"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
