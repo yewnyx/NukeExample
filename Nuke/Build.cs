@@ -17,7 +17,7 @@ class Build : NukeBuild
 {
     public static int Main () => Execute<Build>(x => x.PlayerBuild);
 
-    const string ProjectName = "NukeExample";
+    const string ProjectName = "UnityNukeExample";
 
     [Parameter("Build Profile")] BuildProfile BuildProfile;
 
